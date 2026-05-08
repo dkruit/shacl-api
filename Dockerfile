@@ -1,6 +1,7 @@
 FROM python:slim
 
 WORKDIR /app
+ENV PYTHONPATH="${PYTHONPATH}:/app/shaclapi"
 
 COPY requirements.txt .
 
