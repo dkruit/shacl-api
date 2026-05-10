@@ -62,9 +62,6 @@ def validate():
         conforms, graph = validator.validate(data)
     except Exception:
         return "Error: Unable to parse and validate the provided data.", 400
-    
-    # Serialize the validation graph
-    serialized_graph = graph.serialize(format="turtle")
 
     # Return the serialized graph as a response
     return Response(
