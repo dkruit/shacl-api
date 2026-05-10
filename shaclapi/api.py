@@ -5,9 +5,33 @@ from shaclapi.validator import HealtDCATShaclValidator
 app = Flask(__name__)
 
 
-@app.route('/')
-def hello():
-    return 'Hello, World!'
+@app.route("/")
+def index():
+    """
+    A simple interface to send text to the validation API.
+    It uses HTMX to display the validation result in the same page below the input text field.
+    """
+
+    return """
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>SHACL Validator</title>
+        <script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.10/dist/htmx.min.js" integrity="sha384-H5SrcfygHmAuTDZphMHqBJLc3FhssKjG7w/CeCpFReSfwBWDTKpkzPP8c+cLsK+V" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/htmx-ext-response-targets@2.0.4" integrity="sha384-T41oglUPvXLGBVyRdZsVRxNWnOOqCynaPubjUVjxhsjFTKrFJGEMm3/0KGmNQ+Pg" crossorigin="anonymous"></script>
+    </head>
+    <body hx-ext="response-targets">
+        <h1>SHACL Validator</h1>
+        <form hx-post="/validate" hx-target="#result" hx-target-4*="#result" hx-swap="innerHTML">
+            <label for="rdf_data">Enter RDF Data (Turtle format):</label><br>
+            <textarea id="rdf_data" name="rdf_data" rows="10" cols="50"></textarea><br>
+            <input type="submit" value="Validate">
+        </form>
+
+        <div id="result" style="white-space: pre; font-family: monospace;"></div>
+    </body>
+    </html>
+    """
 
 
 @app.route("/validate", methods=["POST"])
