@@ -2,6 +2,7 @@ from pathlib import Path
 
 import pytest
 from rdflib import URIRef, Literal
+from rdflib.exceptions import ParserError
 
 from shaclapi.validator import HealtDCATShaclValidator
 
@@ -70,4 +71,35 @@ def test_validator_fails(data_file, expected_result_messages):
 
     # Check messages match expected messages
     assert messages == expected_result_messages
+
+
+def test_validator_passes_input_string():
+    data_file_path = TEST_DATA_DIR / "minimal_good.ttl"
+
+    with open(data_file_path) as f:
+        data = f.read()
+
+    # Run the validator
+    validator = HealtDCATShaclValidator()
+    conforms, graph = validator.validate(data)
+
+    # Assert the result matches the expected outcome
+    assert conforms is True
+    assert (None, TYPE_URI, VAL_REPORT_URI) in graph
+    assert (None, CONFORMS_URI, Literal(True)) in graph
+
+
+def test_validator_fails_invalid_rdf():
+    data = """
+    This is not valid rdf
+    it is not text in turtle format
+    """
+
+    # Run the validator
+    validator = HealtDCATShaclValidator()
+    with pytest.raises(ParserError) as err:
+        validator.validate(data)
+
+    assert "tried Turtle but failed" in str(err)
+
     
