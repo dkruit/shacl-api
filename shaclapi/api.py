@@ -10,6 +10,7 @@ def index():
     """
     A simple interface to send text to the validation API.
     It uses HTMX to display the validation result in the same page below the input text field.
+    Set responseText as textContent to display plain text instaed of parsing as HTML (where '<' and '&' give issues).
     """
 
     return """
@@ -28,7 +29,12 @@ def index():
             <input type="submit" value="Validate">
         </form>
 
-        <div id="result" style="white-space: pre; font-family: monospace;"></div>
+        <pre><code id="result" 
+                hx-on:htmx:before-swap="
+                  this.textContent = event.detail.xhr.responseText;
+                  event.preventDefault();
+                ">
+        </code></pre>
     </body>
     </html>
     """
