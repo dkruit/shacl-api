@@ -41,7 +41,7 @@ def check_response_content_is_validation_report(data):
 
     reports = [report for report in graph.subjects(TYPE_URI, VAL_REPORT_URI)]
     
-    assert len(reports) >= 1
+    assert len(reports) == 1
     for report in reports: 
         conforms = [value for value in graph.objects(report, CONFORMS_URI)]
         assert len(conforms) == 1
